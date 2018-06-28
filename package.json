@@ -6,7 +6,8 @@
   "dependencies": {
     "express": "^4.16.3",
     "npm": "^6.1.0",
-    "socket.io": "^2.1.1"
+    "socket.io": "^2.1.1",
+    "socket.io-client": "^2.1.1"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
@@ -15,8 +16,8 @@
     "nodemon": "^1.17.5"
   },
   "scripts": {
-    "dev": "nodemon index.js --exec node_modules/.bin/babel-node --watch",
-    "build": "babel index.js -d dist"
+    "dev": "nodemon ./socket_server/socket_server.js --exec node_modules/.bin/babel-node --watch",
+    "build": "babel ./socket_server/socket_server.js -d dist"
   },
   "repository": {
     "type": "git",
