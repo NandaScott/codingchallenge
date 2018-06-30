@@ -3,7 +3,7 @@ var socket = io.connect('http://localhost:8000');
 var paragraph = document.getElementById('clickedCount');
 var button = document.getElementById('button');
 
-function buttonClicked(client) {
+function buttonClicked (client) {
 	socket.emit('clicked', 'hello');
 }
 

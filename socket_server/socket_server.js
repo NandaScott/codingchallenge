@@ -21,7 +21,7 @@ app.get('/', function (req, res) {
 
 socketServer.on('connection', function (client) {
 	client.on('clicked', function (indicator) {
-		clickCount++;
+		clickCount++; //Here is where we make our API calls based on our websocket calls
 		socketServer.emit('buttonUpdate', clickCount);
 	});
 });
