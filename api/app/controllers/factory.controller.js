@@ -3,19 +3,6 @@ const rn = require('random-number');
 
 // Create and Save a new factory
 exports.create = (req, res) => {
-    // Validate request
-    if (!req.body.name) {
-        return res.status(400).send({
-            message: "Factory must have a name."
-        });
-    }
-
-    if (req.body.number_of_children > 15 || req.body.number_of_children < 0) {
-        return res.status(400).send({
-            message: "Number must be between 0 and 15."
-        });
-    }
-
     let valuesGen = [];
     for (let i = 0; i < req.body.number_of_children; i++) {
         valuesGen.push(rn({min:100, max:999, integer:true}));
@@ -37,7 +24,7 @@ exports.create = (req, res) => {
     });
 };
 
-// Retrieve and return all factory from the database.
+// Retrieve and return all factories from the database.
 exports.findAll = (req, res) => {
     Factory.find()
     .then(factory => {
@@ -63,7 +50,7 @@ exports.findOne = (req, res) => {
     }).catch(err => {
         if (err.kind === 'ObjectId') {
             return res.status(404).send({
-                message: "Note not found with id " + req.params.factoryId
+                message: "Factory not found with id " + req.params.factoryId
             });
         }
         return res.status(500).send({
@@ -75,11 +62,11 @@ exports.findOne = (req, res) => {
 // Update a factory identified by the factoryId in the request
 exports.update = (req, res) => {
     // Validate request
-    if (!req.body.name) {
-        return res.status(400).send({
-            message: "Factory name cannot be empty"
-        });
-    }
+    // if (!req.body.name) {
+    //     return res.status(400).send({
+    //         message: "Factory name cannot be empty"
+    //     });
+    // }
 
     let valuesGen = [];
     for (let i = 0; i < req.body.number_of_children; i++) {
