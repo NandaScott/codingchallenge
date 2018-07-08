@@ -1,5 +1,6 @@
 const Factory = require('../models/factory.model.js');
 const rn = require('random-number');
+const escape = require('escape-html');
 
 // Create and Save a new factory
 exports.create = (req, res) => {
@@ -9,7 +10,7 @@ exports.create = (req, res) => {
     }
 
     const factory = new Factory({
-        name: req.body.name,
+        name: escape(req.body.name),
         number_of_children: req.body.number_of_children,
         values: valuesGen
     });
@@ -38,11 +39,13 @@ exports.findAll = (req, res) => {
 
 // Find a single factory with a factoryId
 exports.findOne = (req, res) => {
-    Factory.findById(req.params.factoryId)
+    let escapedFactoryId = escape(req.params.factoryId);
+
+    Factory.findById(escapedFactoryId)
     .then(factory => {
         if (!factory) {
             return res.status(404).send({
-                message: "Factory not found with id " + req.params.factoryId
+                message: "Factory not found with id " + escapedFactoryId
             });
         }
         res.send(factory);
@@ -50,71 +53,68 @@ exports.findOne = (req, res) => {
     }).catch(err => {
         if (err.kind === 'ObjectId') {
             return res.status(404).send({
-                message: "Factory not found with id " + req.params.factoryId
+                message: "Factory not found with id " + escapedFactoryId
             });
         }
         return res.status(500).send({
-            message: err.message || "Error retrieving factory with id " + req.params.factoryId
+            message: err.message || "Error retrieving factory with id " + escapedFactoryId
         });
     });
 };
 
 // Update a factory identified by the factoryId in the request
 exports.update = (req, res) => {
-    // Validate request
-    // if (!req.body.name) {
-    //     return res.status(400).send({
-    //         message: "Factory name cannot be empty"
-    //     });
-    // }
+    let escapedFactoryId = escape(req.params.factoryId);
 
     let valuesGen = [];
     for (let i = 0; i < req.body.number_of_children; i++) {
         valuesGen.push(rn({min:100, max:999, integer:true}));
     }
 
-    Factory.findByIdAndUpdate(req.params.factoryId, {
-        name: req.body.name || "Untitled Factory",
+    Factory.findByIdAndUpdate(escapedFactoryId, {
+        name: escape(req.body.name) || "Untitled Factory",
         number_of_children: req.body.number_of_children,
         values: valuesGen
     }, {new: true})
     .then(factory => {
         if (!factory) {
             return res.status.send({
-                message: "Factory not found with id " + req.params.factoryId
+                message: "Factory not found with id " + escapedFactoryId
             });
         }
         res.send(factory)
     }).catch(err => {
         if (err.kind === 'ObjectId') {
             return res.status(404).send({
-                message: "Factory not found with id " + req.params.factoryId
+                message: "Factory not found with id " + escapedFactoryId
             });
         }
         return res.status(500).send({
-            message: "Error updating factory with id " + req.params.factoryId
+            message: "Error updating factory with id " + escapedFactoryId
         });
     });
 };
 
 // Delete a factory with the specified factoryId in the request
 exports.delete = (req, res) => {
-    Factory.findByIdAndRemove(req.params.factoryId)
+    let escapedFactoryId = escape(req.params.factoryId);
+
+    Factory.findByIdAndRemove(escapedFactoryId)
     .then(factory => {
         if (!factory) {
             return res.status.send({
-                message: "Factory not found with id " + req.params.factoryId
+                message: "Factory not found with id " + escapedFactoryId
             });
         }
         res.send({message: "Successfully deleted factory!"});
     }).catch(err => {
         if (err.kind === 'ObjectId') {
             return res.status(404).send({
-                message: "Factory not found with id " + req.params.factoryId
+                message: "Factory not found with id " + escapedFactoryId
             });
         }
         return res.status(500).send({
-            message: "Error updating factory with id " + req.params.factoryId
+            message: "Error updating factory with id " + escapedFactoryId
         });
     });
 };
