@@ -1,8 +1,0 @@
-- Enable TLS/SSL
-- Check for any security vulerabilities
-- Encrypt all data sent to app
-- Prevent parameter pollution
-- Tighten session cookies
-- Block cross-site request forgeries
-- No evil regex
-- Add rate limiting
