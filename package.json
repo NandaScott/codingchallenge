@@ -12,7 +12,6 @@
     "joi": "^13.4.0",
     "mongoose": "^5.2.1",
     "npm": "^6.1.0",
-    "random-number": "0.0.9",
     "socket.io": "^2.1.1",
     "socket.io-client": "^2.1.1"
   },
@@ -21,7 +20,9 @@
     "babel-preset-env": "^1.7.0",
     "babel-preset-stage-0": "^6.24.1",
     "nodemon": "^1.17.5",
-    "npm-audit": "0.0.3"
+    "npm-audit": "0.0.3",
+    "random-name": "^0.1.2",
+    "random-number": "0.0.9"
   },
   "scripts": {
     "dev-socket": "nodemon ./socket_server/socket_server.js --exec node_modules/.bin/babel-node --watch",
