@@ -1,40 +1,32 @@
-import express from 'express';
-import io from 'socket.io';
-const path = require('path');
-const rn = require('random-number');
-const randomNames = require('random-name');
+const express = require('express');
+const socketIo = require('socket.io');
+const axios = require('axios');
 
+const index = require('./routes/index');
 const app = express();
 
-const server = app.listen(8000, function () {
-	console.log("Listening on port 8000");
+app.use(index);
+
+const port = process.env.PORT || 4001;
+
+const server = app.listen(port, () => {
+    console.log(`Listening on port ${port}`);
 });
 
-const socketServer = io(server);
+const io = socketIo(server);
 
-app.use(express.static(path.join(__dirname, 'html')));
-app.use(express.static(path.join(__dirname, '..', 'node_modules')));
+const getApiAndEmit = async socket => {
+    const response = await axios.get('http://localhost:8000/factory');
+    console.log('Emitting', response);
+    socket.emit('FromAPI', response.data);
+};
 
-app.get('/', function (req, res) {
-	res.sendFile(path.join(__dirname + '/html/index.html'));
+io.on('connection', socket => {
+    console.log('New connection');
+    return getApiAndEmit(socket);
+    socket.on('disconnect', () => {
+        console.log('Disconnected.')
+    })
 });
 
-var clickCount = 0;
-
-socketServer.on('connection', (client) => {
-	client.on('clicked', function (indicator) {
-		clickCount++; //Here is where we make our API calls based on our websocket calls
-		socketServer.emit('buttonUpdate', clickCount);
-	});
-	// let payload = [];
-	// for (let i = 0; i < rn({ min: 1, max: 15, integer: true }); i++) {
-	// 	let arr = [];
-	// 	for (let i = 0; i < rn({ min: 1, max: 15, integer: true }); i++) {
-	// 		arr.push(rn({ min: 100, max: 999, integer: true }));
-	// 	}
-		
-	// 	payload.push({ name: randomNames(), values: arr });
-	// }
-
-	// socketServer.emit('siteRefresh', payload);
-});
+server.listen(port, () => console.log(`Listening on port ${port}`));
