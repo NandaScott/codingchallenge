@@ -5,7 +5,7 @@ module.exports = (app) => {
     // Creates a new factory
     app.post('/factory', celebrate({
         body: Joi.object().keys({
-            name: Joi.string().alphanum().required(),
+            name: Joi.string().alphanum(),
             number_of_children: Joi.number().min(0).max(15).required()
         })
     }), factory.create);
