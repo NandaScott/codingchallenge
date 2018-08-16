@@ -31,6 +31,13 @@ const generateNumbers = async (socket, data) => {
     io.emit('generatedNumbers', response.data);
 }
 
+const deleteFactory = async (socket, data) => {
+    const response = await axios.delete(`http://localhost:8000/factory/${data.factoryId}`);
+
+    const refresh = await axios.get('http://localhost:8000/factory');
+    io.emit('FromAPI', refresh.data);
+}
+
 io.on('connection', (socket) => {
     console.log('New connection');
 
@@ -44,6 +51,11 @@ io.on('connection', (socket) => {
     socket.on('generateNumbers', (socket, data) => {
         console.log('Generating numbers');
         generateNumbers(socket, data);
+    })
+
+    socket.on('deleteFactory', (socket, data) => {
+        console.log('Deleting factory');
+        deleteFactory(socket, data);
     })
 
     socket.on('disconnect', () => {
