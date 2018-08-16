@@ -13,6 +13,7 @@
     "joi": "^13.4.0",
     "mongoose": "^5.2.1",
     "npm": "^6.1.0",
+    "random-number": "0.0.9",
     "socket.io": "^2.1.1",
     "socket.io-client": "^2.1.1"
   },

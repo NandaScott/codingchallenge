@@ -64,18 +64,22 @@ exports.findOne = (req, res) => {
 
 // Update a factory identified by the factoryId in the request
 exports.update = (req, res) => {
+    let changes = {};
+
     let escapedFactoryId = escape(req.params.factoryId);
 
-    let valuesGen = [];
-    for (let i = 0; i < req.body.number_of_children; i++) {
-        valuesGen.push(rn({min:100, max:999, integer:true}));
+    if (req.body.number_of_children != null) {
+        let valuesGen = [];
+        for (let i = 0; i < req.body.number_of_children; i++) {
+            valuesGen.push(rn({min:100, max:999, integer:true}));
+        }
+        changes.values = valuesGen;
     }
 
-    Factory.findByIdAndUpdate(escapedFactoryId, {
-        name: escape(req.body.name) || "Untitled Factory",
-        number_of_children: req.body.number_of_children,
-        values: valuesGen
-    }, {new: true})
+    changes.name = req.body.name || "Untitled Factory";
+    changes.number_of_children = req.body.number_of_children;
+
+    Factory.findByIdAndUpdate(escapedFactoryId, changes, {new: true})
     .then(factory => {
         if (!factory) {
             return res.status.send({

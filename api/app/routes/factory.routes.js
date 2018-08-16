@@ -26,8 +26,8 @@ module.exports = (app) => {
             factoryId: Joi.string().alphanum().required()
         }),
         body: Joi.object().keys({
-            name: Joi.string().alphanum().required(),
-            number_of_children: Joi.number().min(0).max(15).required()
+            name: Joi.string().alphanum(),
+            number_of_children: Joi.number().min(0).max(15)
         })
     }), factory.update);
 
