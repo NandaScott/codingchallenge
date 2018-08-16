@@ -25,6 +25,12 @@ const renameFactory = async (socket, data) => {
     io.emit('renamedFactory', response.data);
 }
 
+const generateNumbers = async (socket, data) => {
+    const response = await axios.put(`http://localhost:8000/factory/${data.factoryId}`, 
+        {'number_of_children': data.numberOfChildren, 'name': data.name});
+    io.emit('generatedNumbers', response.data);
+}
+
 io.on('connection', (socket) => {
     console.log('New connection');
 
@@ -34,6 +40,11 @@ io.on('connection', (socket) => {
         console.log('Renaming factory');
         renameFactory(socket, data);
     });
+
+    socket.on('generateNumbers', (socket, data) => {
+        console.log('Generating numbers');
+        generateNumbers(socket, data);
+    })
 
     socket.on('disconnect', () => {
         console.log('Disconnected.')
