@@ -28,8 +28,8 @@ app.get('/', function (err, res) {
     res.end('<h1>Hello</h1>')
 });
 
-app.listen(8000, () => {
-    console.log('Listening on locahost:8000');
-});
+const PORT = process.env.PORT || 8000;
 
-// https.createServer(options, app).listen(8080);
+app.listen(PORT, () => {
+    console.log(`Listening on ${PORT}`);
+});

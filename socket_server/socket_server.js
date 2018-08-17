@@ -7,10 +7,10 @@ const app = express();
 
 app.use(index);
 
-const port = process.env.PORT || 4001;
+const PORT = process.env.PORT || 4001;
 
-const server = app.listen(port, () => {
-    console.log(`Listening on port ${port}`);
+const server = app.listen(PORT, () => {
+    console.log(`Listening on port ${PORT}`);
 });
 
 const io = socketIo(server);

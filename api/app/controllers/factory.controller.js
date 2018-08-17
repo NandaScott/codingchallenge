@@ -69,11 +69,17 @@ exports.update = (req, res) => {
     let escapedFactoryId = escape(req.params.factoryId);
 
     let floor = req.body.minimum || 0;
-    let ceiling = req.body.maximum || 9999;
+    let ceiling = req.body.maximum || 999999;
 
     if (floor === ceiling) {
         return res.status(400).send({
             message: 'Minimum and maximum cannot be the same.'
+        })
+    }
+
+    if (ceiling < floor) {
+        return res.status(400).send({
+            message: 'Maximum cannot be lower than minimum.'
         })
     }
 
