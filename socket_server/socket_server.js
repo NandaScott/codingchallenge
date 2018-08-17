@@ -17,6 +17,7 @@ const io = socketIo(server);
 
 io.on('connection', (socket) => {
 
+    // INIT
     axios.get('http://localhost:8000/factory')
         .then((response) => {
             socket.emit('FromAPI', response.data);
@@ -25,15 +26,17 @@ io.on('connection', (socket) => {
             io.emit('handleError', error.response.data);
         });
 
+
     socket.on('renameFactory', (data) => {
         axios.put(`http://localhost:8000/factory/${data.factoryId}`, {'name': data.name})
             .then((response) => {
                 io.emit('renamedFactory', response.data);
             })
             .catch((error) => {
-                socket.broadcast.emit('handleError', error.response.data);
+                socket.emit('handleError', error.response.data);
             });
     });
+
 
     socket.on('generateNumbers', (data) => {
         axios.put(`http://localhost:8000/factory/${data.factoryId}`, 
@@ -42,14 +45,15 @@ io.on('connection', (socket) => {
                 io.emit('generatedNumbers', response.data);
             })
             .catch((error) => {
-                io.emit('handleError', error.response.data);
+                socket.emit('handleError', error.response.data);
             });
     });
+
 
     socket.on('deleteFactory', (data) => {
         axios.delete(`http://localhost:8000/factory/${data.factoryId}`)
             .catch((error) => {
-                io.emit('handleError', error.response.data);
+                socket.emit('handleError', error.response.data);
             });
 
         axios.get('http://localhost:8000/factory')
@@ -57,15 +61,16 @@ io.on('connection', (socket) => {
                 io.emit('FromAPI', response.data);
             })
             .catch((error) => {
-                io.emit('handleError', error.response.data);
+                socket.emit('handleError', error.response.data);
             });
     });
+
 
     socket.on('createFactory', (data) => {
         axios.post('http://localhost:8000/factory',
             {'number_of_children': data.numberOfChildren, 'name': data.name})
             .catch((error) => {
-                io.emit('handleError', error.response.data);
+                socket.emit('handleError', error.response.data);
             });
 
         axios.get('http://localhost:8000/factory')
@@ -73,7 +78,7 @@ io.on('connection', (socket) => {
                 io.emit('FromAPI', response.data);
             })
             .catch((error) => {
-                io.emit('handleError', error.response.data);
+                socket.emit('handleError', error.response.data);
             });
     });
 });
