@@ -5,8 +5,8 @@ module.exports = (app) => {
     // Creates a new factory
     app.post('/factory', celebrate({
         body: Joi.object().keys({
-            name: Joi.string().alphanum(),
-            number_of_children: Joi.number().min(0).max(15).required()
+            name: Joi.string().alphanum().error(new Error('Name must only have alphanumeric characters.')),
+            number_of_children: Joi.number().min(0).max(15).error(new Error('Must be a number between 0 and 15.'))
         })
     }), factory.create);
 
@@ -26,8 +26,8 @@ module.exports = (app) => {
             factoryId: Joi.string().alphanum().required()
         }),
         body: Joi.object().keys({
-            name: Joi.string().alphanum(),
-            number_of_children: Joi.number().min(0).max(15)
+            name: Joi.string().alphanum().error(new Error('Name must only have alphanumeric characters.')),
+            number_of_children: Joi.number().min(0).max(15).error(new Error('Must be a number between 0 and 15.'))
         })
     }), factory.update);
 

@@ -15,65 +15,67 @@ const server = app.listen(port, () => {
 
 const io = socketIo(server);
 
-const getApiAndEmit = async (socket) => {
-    const response = await axios.get('http://localhost:8000/factory');
-    socket.emit('FromAPI', response.data);
-};
-
-const renameFactory = async (socket, data) => {
-    const response = await axios.put(`http://localhost:8000/factory/${data.factoryId}`, {'name': data.name});
-    io.emit('renamedFactory', response.data);
-}
-
-const generateNumbers = async (socket, data) => {
-    const response = await axios.put(`http://localhost:8000/factory/${data.factoryId}`, 
-        {'number_of_children': data.numberOfChildren, 'name': data.name});
-    io.emit('generatedNumbers', response.data);
-}
-
-const deleteFactory = async (socket, data) => {
-    const response = await axios.delete(`http://localhost:8000/factory/${data.factoryId}`);
-
-    const refresh = await axios.get('http://localhost:8000/factory');
-    io.emit('FromAPI', refresh.data);
-}
-
-const createFactory = async (socket, data) => {
-    const response = await axios.post('http://localhost:8000/factory',
-        {'number_of_children': data.numberOfChildren, 'name': data.name});
-    const refresh = await axios.get('http://localhost:8000/factory');
-    io.emit('FromAPI', refresh.data);
-}
-
 io.on('connection', (socket) => {
-    console.log('New connection');
 
-    getApiAndEmit(socket);
+    axios.get('http://localhost:8000/factory')
+        .then((response) => {
+            socket.emit('FromAPI', response.data);
+        })
+        .catch((error) => {
+            io.emit('handleError', error.response.data);
+        });
 
-    socket.on('renameFactory', (socket, data) => {
-        console.log('Renaming factory');
-        renameFactory(socket, data);
+    socket.on('renameFactory', (data) => {
+        axios.put(`http://localhost:8000/factory/${data.factoryId}`, {'name': data.name})
+            .then((response) => {
+                io.emit('renamedFactory', response.data);
+            })
+            .catch((error) => {
+                socket.broadcast.emit('handleError', error.response.data);
+            });
     });
 
-    socket.on('generateNumbers', (socket, data) => {
-        console.log('Generating numbers');
-        generateNumbers(socket, data);
+    socket.on('generateNumbers', (data) => {
+        axios.put(`http://localhost:8000/factory/${data.factoryId}`, 
+            {'number_of_children': data.numberOfChildren, 'name': data.name})
+            .then((response) => {
+                io.emit('generatedNumbers', response.data);
+            })
+            .catch((error) => {
+                io.emit('handleError', error.response.data);
+            });
     });
 
-    socket.on('deleteFactory', (socket, data) => {
-        console.log('Deleting factory');
-        deleteFactory(socket, data);
+    socket.on('deleteFactory', (data) => {
+        axios.delete(`http://localhost:8000/factory/${data.factoryId}`)
+            .catch((error) => {
+                io.emit('handleError', error.response.data);
+            });
+
+        axios.get('http://localhost:8000/factory')
+            .then((response) => {
+                io.emit('FromAPI', response.data);
+            })
+            .catch((error) => {
+                io.emit('handleError', error.response.data);
+            });
     });
 
-    socket.on('createFactory', (socket, data) => {
-        console.log('Creating factory');
-        createFactory(socket, data);
-    });
+    socket.on('createFactory', (data) => {
+        axios.post('http://localhost:8000/factory',
+            {'number_of_children': data.numberOfChildren, 'name': data.name})
+            .catch((error) => {
+                io.emit('handleError', error.response.data);
+            });
 
-    socket.on('disconnect', () => {
-        console.log('Disconnected.')
+        axios.get('http://localhost:8000/factory')
+            .then((response) => {
+                io.emit('FromAPI', response.data);
+            })
+            .catch((error) => {
+                io.emit('handleError', error.response.data);
+            });
     });
-    
 });
 
 
