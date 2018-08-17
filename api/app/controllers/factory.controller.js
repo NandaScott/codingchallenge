@@ -68,10 +68,19 @@ exports.update = (req, res) => {
 
     let escapedFactoryId = escape(req.params.factoryId);
 
+    let floor = req.body.minimum || 0;
+    let ceiling = req.body.maximum || 9999;
+
+    if (floor === ceiling) {
+        return res.status(400).send({
+            message: 'Minimum and maximum cannot be the same.'
+        })
+    }
+
     if (req.body.number_of_children != null) {
         let valuesGen = [];
         for (let i = 0; i < req.body.number_of_children; i++) {
-            valuesGen.push(rn({min:100, max:999, integer:true}));
+            valuesGen.push(rn({min:floor, max:ceiling, integer:true}));
         }
         changes.values = valuesGen;
     }

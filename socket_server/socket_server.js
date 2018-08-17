@@ -39,8 +39,13 @@ io.on('connection', (socket) => {
 
 
     socket.on('generateNumbers', (data) => {
-        axios.put(`http://localhost:8000/factory/${data.factoryId}`, 
-            {'number_of_children': data.numberOfChildren, 'name': data.name})
+        axios.put(`http://localhost:8000/factory/${data.factoryId}`,
+            {
+                'number_of_children': data.numberOfChildren,
+                'name': data.name,
+                'minimum': data.minimum,
+                'maximum': data.maximum
+            })
             .then((response) => {
                 io.emit('generatedNumbers', response.data);
             })
