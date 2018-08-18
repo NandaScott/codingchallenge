@@ -1,2 +1,1 @@
-web: npm run dev-api
-web: npm run dev-socket
+web: npm run dev-api && npm run dev-socket
