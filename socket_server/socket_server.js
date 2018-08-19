@@ -18,7 +18,7 @@ const io = socketIo(server);
 io.on('connection', (socket) => {
 
     // INIT
-    axios.get('http://localhost:8000/factory')
+    axios.get('http://challengebackend.herokuapp.com/factory')
         .then((response) => {
             socket.emit('FromAPI', response.data);
         })
@@ -28,7 +28,7 @@ io.on('connection', (socket) => {
 
 
     socket.on('renameFactory', (data) => {
-        axios.put(`http://localhost:8000/factory/${data.factoryId}`, {'name': data.name})
+        axios.put(`http://challengebackend.herokuapp.com/factory/${data.factoryId}`, {'name': data.name})
             .then((response) => {
                 io.emit('renamedFactory', response.data);
             })
@@ -39,7 +39,7 @@ io.on('connection', (socket) => {
 
 
     socket.on('generateNumbers', (data) => {
-        axios.put(`http://localhost:8000/factory/${data.factoryId}`,
+        axios.put(`http://challengebackend.herokuapp.com/factory/${data.factoryId}`,
             {
                 'number_of_children': data.numberOfChildren,
                 'name': data.name,
@@ -56,12 +56,12 @@ io.on('connection', (socket) => {
 
 
     socket.on('deleteFactory', (data) => {
-        axios.delete(`http://localhost:8000/factory/${data.factoryId}`)
+        axios.delete(`http://challengebackend.herokuapp.com/factory/${data.factoryId}`)
             .catch((error) => {
                 socket.emit('handleError', error.response.data);
             });
 
-        axios.get('http://localhost:8000/factory')
+        axios.get('http://challengebackend.herokuapp.com/factory')
             .then((response) => {
                 io.emit('FromAPI', response.data);
             })
@@ -72,13 +72,13 @@ io.on('connection', (socket) => {
 
 
     socket.on('createFactory', (data) => {
-        axios.post('http://localhost:8000/factory',
+        axios.post('http://challengebackend.herokuapp.com/factory',
             {'number_of_children': data.numberOfChildren, 'name': data.name})
             .catch((error) => {
                 socket.emit('handleError', error.response.data);
             });
 
-        axios.get('http://localhost:8000/factory')
+        axios.get('http://challengebackend.herokuapp.com/factory')
             .then((response) => {
                 io.emit('FromAPI', response.data);
             })
