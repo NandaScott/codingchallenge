@@ -29,7 +29,7 @@ module.exports = (app) => {
             name: Joi.string().alphanum().error(new Error('Name must only have alphanumeric characters.')),
             number_of_children: Joi.number().min(0).max(15).error(new Error('Must be a number between 0 and 15.')),
             minimum: Joi.number().min(0).max(999999).error(new Error('Minimum must be a number greater than or equal to 0.')),
-            maximum: Joi.number().min(0).max(999999).error(new Error('Maximum must be a number less than or equal to 9999.'))
+            maximum: Joi.number().min(0).max(999999).error(new Error('Maximum must be a number less than or equal to 999999.'))
         })
     }), factory.update);
 
