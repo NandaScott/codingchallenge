@@ -11,7 +11,7 @@ exports.create = (req, res) => {
 
     const factory = new Factory({
         name: escape(req.body.name),
-        number_of_children: req.body.number_of_children,
+        number_of_children: valuesGen.length,
         values: valuesGen
     });
 

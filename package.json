@@ -25,9 +25,9 @@
     "npm-audit": "0.0.3"
   },
   "scripts": {
-    "dev-socket": "nodemon ./socket_server/socket_server.js --exec node_modules/.bin/babel-node --watch",
-    "dev-api": "node ./api/server.js",
-    "build": "babel ./socket_server/socket_server.js -d dist",
+    "prod-api": "node ./api/server.js",
+    "dev-api": "nodemon ./api/server.js --exec node_modules/.bin/babel-node --watch",
+    "build": "babel ./api/server.js -d dist",
     "audit": "npm-audit",
     "postinstall": "npm-audit",
     "pretest": "npm-audit"
